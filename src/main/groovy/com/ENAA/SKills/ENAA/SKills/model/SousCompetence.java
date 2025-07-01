@@ -1,23 +1,16 @@
 package com.ENAA.SKills.ENAA.SKills.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
 
 @Entity
 public class SousCompetence {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String titre;
-
-    @Getter
-    private boolean valide;
-
-    @ManyToOne
-    @JoinColumn(name = "competence_id")
-    private Competence competence;
-
-
+    // Getters et setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getTitre() { return titre; }
+    public void setTitre(String titre) { this.titre = titre; }
 }
