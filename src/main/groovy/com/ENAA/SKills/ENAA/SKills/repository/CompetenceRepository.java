@@ -1,4 +1,7 @@
 package com.ENAA.SKills.ENAA.SKills.repository;
 
-public interface CompetenceRepository {
+import com.ENAA.SKills.ENAA.SKills.model.Competence;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CompetenceRepository extends JpaRepository<Competence, Long> {
 }

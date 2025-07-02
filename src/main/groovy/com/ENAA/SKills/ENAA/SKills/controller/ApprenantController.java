@@ -3,6 +3,7 @@ package com.ENAA.SKills.ENAA.SKills.controller;
 import com.ENAA.SKills.ENAA.SKills.model.Apprenant;
 import com.ENAA.SKills.ENAA.SKills.service.ApprenantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,9 +31,13 @@ public class ApprenantController {
     }
 
     @PutMapping("/{id}")
-    public Apprenant update(@PathVariable Long id, @RequestBody Apprenant apprenant) {
+    public ResponseEntity<Apprenant> update(@PathVariable Long id, @RequestBody Apprenant apprenant) {
+        Optional<Apprenant> existing = apprenantService.findById(id);
+        if (existing.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         apprenant.setId(id);
-        return apprenantService.save(apprenant);
+        return ResponseEntity.ok(apprenantService.save(apprenant));
     }
 
     @DeleteMapping("/{id}")

@@ -21,6 +21,7 @@ public class SousCompetenceController {
 
     @GetMapping
     public List<SousCompetence> getAll() {
+
         return sousCompetenceService.findAll();
     }
 

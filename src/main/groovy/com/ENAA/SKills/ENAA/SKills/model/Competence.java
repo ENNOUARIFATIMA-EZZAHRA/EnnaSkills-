@@ -1,6 +1,8 @@
 package com.ENAA.SKills.ENAA.SKills.model;
 
 import com.ENAA.SKills.ENAA.SKills.model.SousCompetence;
+import com.ENAA.SKills.ENAA.SKills.model.ValidationSousCompetence;
+import com.ENAA.SKills.ENAA.SKills.model.StatutValidation;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -15,10 +17,17 @@ public class Competence {
 
     @OneToMany(mappedBy = "competence", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SousCompetence> sousCompetences;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getNom() { return nom; }
+    public void setNom(String nom) { this.nom = nom; }
+    public List<SousCompetence> getSousCompetences() { return sousCompetences; }
+    public void setSousCompetences(List<SousCompetence> sousCompetences) { this.sousCompetences = sousCompetences; }
+
     public boolean isValide() {
         if (sousCompetences == null || sousCompetences.isEmpty()) return false;
         return sousCompetences.stream().allMatch(SousCompetence::isValide);
     }
-
 
 }

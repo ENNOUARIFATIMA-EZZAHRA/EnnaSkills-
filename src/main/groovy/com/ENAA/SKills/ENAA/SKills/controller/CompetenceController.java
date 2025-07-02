@@ -24,7 +24,7 @@ public class CompetenceController {
         public List<String> sousCompetences;
     }
 
-    // CRUD de base
+
     @PostMapping
     public Competence create(@RequestBody Competence competence) {
         return competenceService.save(competence);
@@ -65,5 +65,10 @@ public class CompetenceController {
             }
         }
         return competence;
+    }
+
+    @GetMapping("/{competenceId}/acquired-by/{apprenantId}")
+    public boolean isCompetenceAcquiredByApprenant(@PathVariable Long competenceId, @PathVariable Long apprenantId) {
+        return competenceService.isCompetenceAcquiredByApprenant(competenceId, apprenantId);
     }
 }

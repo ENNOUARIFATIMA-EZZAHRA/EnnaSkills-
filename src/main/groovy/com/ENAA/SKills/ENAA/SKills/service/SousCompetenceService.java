@@ -22,10 +22,12 @@ public class SousCompetenceService {
     }
 
     public Optional<SousCompetence> findById(Long id) {
+
         return repository.findById(id);
     }
 
     public void deleteById(Long id) {
+
         repository.deleteById(id);
     }
 }
