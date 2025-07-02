@@ -41,7 +41,8 @@ public class ApprenantController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         apprenantService.deleteById(id);
+        return ResponseEntity.ok("Apprenant supprimé avec succès");
     }
 }

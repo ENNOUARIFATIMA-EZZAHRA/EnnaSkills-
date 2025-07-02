@@ -3,6 +3,7 @@ package com.ENAA.SKills.ENAA.SKills.model;
 import com.ENAA.SKills.ENAA.SKills.model.SousCompetence;
 import com.ENAA.SKills.ENAA.SKills.model.ValidationSousCompetence;
 import com.ENAA.SKills.ENAA.SKills.model.StatutValidation;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -15,9 +16,9 @@ public class Competence {
 
     private String nom;
 
-    @OneToMany(mappedBy = "competence", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "competence", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<SousCompetence> sousCompetences;
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getNom() { return nom; }

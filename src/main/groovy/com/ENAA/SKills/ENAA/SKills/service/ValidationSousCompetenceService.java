@@ -8,6 +8,7 @@ import com.ENAA.SKills.ENAA.SKills.repository.ValidationSousCompetenceRepository
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,5 +37,9 @@ public class ValidationSousCompetenceService {
         return repository.findAll().stream()
             .filter(v -> v.getApprenant().getId().equals(apprenant.getId()) && v.getSousCompetence().getId().equals(sousCompetence.getId()))
             .findFirst();
+    }
+
+    public java.util.List<ValidationSousCompetence> getAll() {
+        return repository.findAll();
     }
 } 
