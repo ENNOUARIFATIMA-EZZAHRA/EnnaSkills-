@@ -3,6 +3,8 @@ package com.ENAA.SKills.ENAA.SKills.service;
 import com.ENAA.SKills.ENAA.SKills.model.Apprenant;
 import com.ENAA.SKills.ENAA.SKills.repository.ApprenantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +21,11 @@ public class ApprenantService {
 
     public List<Apprenant> findAll() {
         return repository.findAll();
+    }
+
+    // Méthode pour récupérer les apprenants avec pagination
+    public Page<Apprenant> findAllPaginated(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     public Optional<Apprenant> findById(Long id) {
