@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +34,10 @@ public class RapportController {
     private ValidationSousCompetenceService validationService;
 
     @GetMapping("/progression/{apprenantId}")
-    public ProgressionDto getProgression(@PathVariable Long apprenantId) {
+    public ProgressionDto getProgression(
+        @PathVariable Long apprenantId,
+        @RequestParam(required = false) String statut // nouveau paramètre optionnel
+    ) {
         Optional<Apprenant> apprenantOpt = apprenantService.findById(apprenantId);
         if (apprenantOpt.isEmpty()) return null;
         Apprenant apprenant = apprenantOpt.get();
@@ -66,7 +68,10 @@ public class RapportController {
                         scp.statut = StatutValidation.NON_VALIDE.name();
                         allValid = false;
                     }
-                    cp.sousCompetences.add(scp);
+                    // Filtrage ici :
+                    if (statut == null || scp.statut.equalsIgnoreCase(statut)) {
+                        cp.sousCompetences.add(scp);
+                    }
                 }
             }
             cp.acquise = allValid && cp.sousCompetences.size() > 0;
@@ -74,33 +79,6 @@ public class RapportController {
         }
         return dto;
     }
-
-    @GetMapping("/export/csv/{apprenantId}")
-    public void exportProgressionToCSV(@PathVariable Long apprenantId, HttpServletResponse response) throws IOException {
-        response.setContentType("text/csv");
-        response.setHeader("Content-Disposition", "attachment; filename=progression.csv");
-
-      
-        ProgressionDto progression = getProgression(apprenantId);
-        if (progression == null) {
-            response.sendError(404, "Apprenant non trouvé");
-            return;
-        }
-
-        PrintWriter writer = response.getWriter();
-        // رأس الجدول
-        writer.println("Apprenant,Competence,Sous-Competence,Statut");
-
-        // اكتب كل سطر
-        for (ProgressionDto.CompetenceProgression comp : progression.competences) {
-            for (ProgressionDto.SousCompetenceProgression sous : comp.sousCompetences) {
-                writer.println(progression.apprenantNom + "," + comp.nom + "," + sous.titre + "," + sous.statut);
-            }
-        }
-        writer.flush();
-        writer.close();
-    }
-
 
 
     @GetMapping("/export/pdf/{apprenantId}")
