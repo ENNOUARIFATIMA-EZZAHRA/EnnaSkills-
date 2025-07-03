@@ -12,9 +12,17 @@ import com.ENAA.SKills.ENAA.SKills.service.ValidationSousCompetenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 @RestController
 @RequestMapping("/api/rapport")
@@ -65,5 +73,74 @@ public class RapportController {
             dto.competences.add(cp);
         }
         return dto;
+    }
+
+    @GetMapping("/export/csv/{apprenantId}")
+    public void exportProgressionToCSV(@PathVariable Long apprenantId, HttpServletResponse response) throws IOException {
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=progression.csv");
+
+      
+        ProgressionDto progression = getProgression(apprenantId);
+        if (progression == null) {
+            response.sendError(404, "Apprenant non trouvé");
+            return;
+        }
+
+        PrintWriter writer = response.getWriter();
+        // رأس الجدول
+        writer.println("Apprenant,Competence,Sous-Competence,Statut");
+
+        // اكتب كل سطر
+        for (ProgressionDto.CompetenceProgression comp : progression.competences) {
+            for (ProgressionDto.SousCompetenceProgression sous : comp.sousCompetences) {
+                writer.println(progression.apprenantNom + "," + comp.nom + "," + sous.titre + "," + sous.statut);
+            }
+        }
+        writer.flush();
+        writer.close();
+    }
+
+
+
+    @GetMapping("/export/pdf/{apprenantId}")
+    public void exportProgressionToPDF(@PathVariable Long apprenantId, HttpServletResponse response) throws IOException {
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=progression.pdf");
+
+        ProgressionDto progression = getProgression(apprenantId);
+        if (progression == null) {
+            response.sendError(404, "Apprenant non trouvé");
+            return;
+        }
+
+        try {
+            Document document = new Document();
+            PdfWriter.getInstance(document, response.getOutputStream());
+            document.open();
+
+            document.add(new Paragraph("Rapport de progression de l'apprenant: " + progression.apprenantNom));
+            document.add(new Paragraph(" "));
+
+            PdfPTable table = new PdfPTable(4);
+            table.addCell("Apprenant");
+            table.addCell("Competence");
+            table.addCell("Sous-Competence");
+            table.addCell("Statut");
+
+            for (ProgressionDto.CompetenceProgression comp : progression.competences) {
+                for (ProgressionDto.SousCompetenceProgression sous : comp.sousCompetences) {
+                    table.addCell(progression.apprenantNom);
+                    table.addCell(comp.nom);
+                    table.addCell(sous.titre);
+                    table.addCell(sous.statut);
+                }
+            }
+
+            document.add(table);
+            document.close();
+        } catch (Exception e) {
+            response.sendError(500, "Erreur lors de la génération du PDF: " + e.getMessage());
+        }
     }
 }

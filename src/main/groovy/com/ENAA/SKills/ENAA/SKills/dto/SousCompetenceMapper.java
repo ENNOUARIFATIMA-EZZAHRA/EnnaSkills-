@@ -7,9 +7,7 @@ public class SousCompetenceMapper {
         if (sousCompetence == null) return null;
         SousCompetenceDto dto = new SousCompetenceDto();
         dto.setId(sousCompetence.getId());
-        dto.setNom(sousCompetence.getTitre()); // Adapter si le champ s'appelle titre dans l'entité
-        // dto.setDescription(...); // à adapter si le champ existe dans l'entité
-        // dto.setCompetenceId(...); // à adapter si la relation existe
+        dto.setNom(sousCompetence.getTitre());
         return dto;
     }
 
@@ -17,9 +15,7 @@ public class SousCompetenceMapper {
         if (dto == null) return null;
         SousCompetence sousCompetence = new SousCompetence();
         sousCompetence.setId(dto.getId());
-        sousCompetence.setTitre(dto.getNom()); // Adapter si le champ s'appelle titre dans l'entité
-        // sousCompetence.setDescription(...); // à adapter si le champ existe dans l'entité
-        // sousCompetence.setCompetenceId(...); // à adapter si la relation existe
+        sousCompetence.setTitre(dto.getNom());
         return sousCompetence;
     }
 } 
