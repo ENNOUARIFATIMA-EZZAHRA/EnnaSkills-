@@ -86,7 +86,7 @@ public class RapportController {
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=progression.pdf");
 
-        ProgressionDto progression = getProgression(apprenantId);
+        ProgressionDto progression = getProgression(apprenantId, null);
         if (progression == null) {
             response.sendError(404, "Apprenant non trouvé");
             return;
