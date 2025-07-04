@@ -58,4 +58,8 @@ public class CompetenceService {
         }
         return true;
     }
+
+    public List<Competence> getAllCompetences() {
+        return repository.findAll();
+    }
 }

@@ -35,4 +35,8 @@ public class ApprenantService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public Apprenant getApprenantById(Long id) {
+        return repository.findById(id).orElseThrow();
+    }
 }

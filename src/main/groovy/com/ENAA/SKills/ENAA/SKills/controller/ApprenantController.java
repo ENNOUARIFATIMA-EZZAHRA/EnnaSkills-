@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import com.ENAA.SKills.ENAA.SKills.model.Competence;
 import com.ENAA.SKills.ENAA.SKills.service.CompetenceService;
+import com.ENAA.SKills.ENAA.SKills.dto.DashboardCompetenceDto;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/apprenants")
@@ -66,6 +68,26 @@ public class ApprenantController {
     @GetMapping("/{id}")
     public Optional<Apprenant> getById(@PathVariable Long id) {
         return apprenantService.findById(id);
+    }
+
+    @GetMapping("/apprenants/{id}/dashboard")
+    public DashboardCompetenceDto getDashboard(@PathVariable Long id) {
+        Apprenant apprenant = apprenantService.getApprenantById(id);
+        List<Competence> allCompetences = competenceService.getAllCompetences();
+
+        DashboardCompetenceDto dto = new DashboardCompetenceDto();
+        dto.apprenantId = apprenant.getId();
+        dto.nom = apprenant.getNom();
+        dto.competences = new ArrayList<>();
+
+        for (Competence c : allCompetences) {
+            DashboardCompetenceDto.CompetenceEtat etat = new DashboardCompetenceDto.CompetenceEtat();
+            etat.id = c.getId();
+            etat.nom = c.getNom();
+            etat.acquise = apprenant.getCompetences().contains(c);
+            dto.competences.add(etat);
+        }
+        return dto;
     }
 
     @PutMapping("/{id}")
