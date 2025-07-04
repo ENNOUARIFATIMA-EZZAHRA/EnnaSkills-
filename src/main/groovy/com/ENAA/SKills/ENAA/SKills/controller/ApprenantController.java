@@ -12,16 +12,34 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import com.ENAA.SKills.ENAA.SKills.model.Competence;
+import com.ENAA.SKills.ENAA.SKills.service.CompetenceService;
 
 @RestController
 @RequestMapping("/api/apprenants")
 public class ApprenantController {
     @Autowired
     private ApprenantService apprenantService;
+    @Autowired
+    private CompetenceService competenceService;
 
     @PostMapping
     public Apprenant create(@RequestBody Apprenant apprenant) {
         return apprenantService.save(apprenant);
+    }
+
+    @PostMapping("/{apprenantId}/add-competence/{competenceId}")
+    public ResponseEntity<String> addCompetenceToApprenant(@PathVariable Long apprenantId, @PathVariable Long competenceId) {
+        Optional<Apprenant> apprenantOpt = apprenantService.findById(apprenantId);
+        Optional<Competence> competenceOpt = competenceService.findById(competenceId);
+        if (apprenantOpt.isPresent() && competenceOpt.isPresent()) {
+            Apprenant apprenant = apprenantOpt.get();
+            Competence competence = competenceOpt.get();
+            apprenant.getCompetences().add(competence);
+            apprenantService.save(apprenant);
+            return ResponseEntity.ok("Competence ajoutée à l'apprenant !");
+        }
+        return ResponseEntity.status(404).body("Apprenant ou Competence introuvable");
     }
 
     @GetMapping

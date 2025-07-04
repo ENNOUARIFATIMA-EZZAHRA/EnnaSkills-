@@ -1,6 +1,8 @@
 package com.ENAA.SKills.ENAA.SKills.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Apprenant {
@@ -9,6 +11,14 @@ public class Apprenant {
     private Long id;
     private String nom;
     private String email;
+    @ManyToMany
+    @JoinTable(
+        name = "apprenant_competence",
+        joinColumns = @JoinColumn(name = "apprenant_id"),
+        inverseJoinColumns = @JoinColumn(name = "competence_id")
+    )
+    private List<Competence> competences = new ArrayList<>();
+
     // Getters et setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -16,4 +26,7 @@ public class Apprenant {
     public void setNom(String nom) { this.nom = nom; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public List<Competence> getCompetences() { return competences; }
+    public void setCompetences(List<Competence> competences) { this.competences = competences; }
 }

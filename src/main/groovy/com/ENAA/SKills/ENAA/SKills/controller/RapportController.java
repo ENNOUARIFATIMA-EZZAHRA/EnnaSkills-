@@ -22,6 +22,8 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.ENAA.SKills.ENAA.SKills.model.Rapport;
+import com.ENAA.SKills.ENAA.SKills.service.RapportService;
 
 @RestController
 @RequestMapping("/api/rapport")
@@ -32,6 +34,8 @@ public class RapportController {
     private CompetenceService competenceService;
     @Autowired
     private ValidationSousCompetenceService validationService;
+    @Autowired
+    private RapportService rapportService;
 
     @GetMapping("/progression/{apprenantId}")
     public ProgressionDto getProgression(
@@ -92,6 +96,24 @@ public class RapportController {
             return;
         }
 
+        // --- توليد نص مبسط للتقرير ---
+        StringBuilder rapportContent = new StringBuilder();
+        rapportContent.append("Apprenant: ").append(progression.apprenantNom).append("\n");
+        rapportContent.append("Competence | Sous-Competence | Statut\n");
+        for (ProgressionDto.CompetenceProgression comp : progression.competences) {
+            for (ProgressionDto.SousCompetenceProgression sous : comp.sousCompetences) {
+                rapportContent.append(comp.nom).append(" | ")
+                    .append(sous.titre).append(" | ")
+                    .append(sous.statut).append("\n");
+            }
+        }
+        // --- حفظ rapport في قاعدة البيانات ---
+        Rapport rapport = new Rapport();
+        rapport.setAuthor(progression.apprenantNom);
+        rapport.setTitle("Rapport de progression");
+        rapport.setContent(rapportContent.toString());
+        rapportService.save(rapport);
+
         try {
             Document document = new Document();
             PdfWriter.getInstance(document, response.getOutputStream());
@@ -118,7 +140,12 @@ public class RapportController {
             document.add(table);
             document.close();
         } catch (Exception e) {
-            response.sendError(500, "Erreur lors de la génération du PDF: " + e.getMessage());
+            response.sendError(500, "Erreur lors de la génération du PDF");
         }
+    }
+
+    @PostMapping("/rapport")
+    public Rapport createRapport(@RequestBody Rapport rapport) {
+        return rapportService.save(rapport);
     }
 }
