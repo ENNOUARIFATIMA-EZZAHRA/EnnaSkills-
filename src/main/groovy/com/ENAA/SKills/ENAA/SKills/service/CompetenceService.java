@@ -14,10 +14,13 @@ import java.util.Optional;
 
 @Service
 public class CompetenceService {
-    @Autowired
-    private CompetenceRepository repository;
-    @Autowired
-    private ValidationSousCompetenceRepository validationRepository;
+    private final CompetenceRepository repository;
+    private final ValidationSousCompetenceRepository validationRepository;
+
+    public CompetenceService(CompetenceRepository repository, ValidationSousCompetenceRepository validationRepository) {
+        this.repository = repository;
+        this.validationRepository = validationRepository;
+    }
 
     public Competence save(Competence competence) {
 
