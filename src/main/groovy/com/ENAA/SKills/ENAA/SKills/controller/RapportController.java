@@ -96,7 +96,7 @@ public class RapportController {
             return;
         }
 
-        // --- توليد نص مبسط للتقرير ---
+
         StringBuilder rapportContent = new StringBuilder();
         rapportContent.append("Apprenant: ").append(progression.apprenantNom).append("\n");
         rapportContent.append("Competence | Sous-Competence | Statut\n");

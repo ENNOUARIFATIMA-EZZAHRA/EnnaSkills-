@@ -16,6 +16,8 @@ import com.ENAA.SKills.ENAA.SKills.model.Competence;
 import com.ENAA.SKills.ENAA.SKills.service.CompetenceService;
 import com.ENAA.SKills.ENAA.SKills.dto.DashboardCompetenceDto;
 import java.util.ArrayList;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api/apprenants")
@@ -70,9 +72,10 @@ public class ApprenantController {
         return apprenantService.findById(id);
     }
 
-    @GetMapping("/apprenants/{id}/dashboard")
+    @GetMapping("/{id}/dashboard")
     public DashboardCompetenceDto getDashboard(@PathVariable Long id) {
-        Apprenant apprenant = apprenantService.getApprenantById(id);
+        Apprenant apprenant = apprenantService.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Apprenant not found"));
         List<Competence> allCompetences = competenceService.getAllCompetences();
 
         DashboardCompetenceDto dto = new DashboardCompetenceDto();

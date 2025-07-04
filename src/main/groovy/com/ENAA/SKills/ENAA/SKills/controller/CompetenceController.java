@@ -24,6 +24,11 @@ public class CompetenceController {
         public List<String> sousCompetences;
     }
 
+    // DTO pour la mise à jour
+    public static class CompetenceUpdateDto {
+        public String nom;
+    }
+
 
     @PostMapping
     public Competence create(@RequestBody Competence competence) {
@@ -41,8 +46,9 @@ public class CompetenceController {
     }
 
     @PutMapping("/{id}")
-    public Competence update(@PathVariable Long id, @RequestBody Competence competence) {
-        competence.setId(id);
+    public Competence update(@PathVariable Long id, @RequestBody CompetenceUpdateDto dto) {
+        Competence competence = competenceService.findById(id).orElseThrow();
+        if (dto.nom != null) competence.setNom(dto.nom);
         return competenceService.save(competence);
     }
 
