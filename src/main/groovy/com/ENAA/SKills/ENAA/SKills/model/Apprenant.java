@@ -17,6 +17,7 @@ public class Apprenant {
         joinColumns = @JoinColumn(name = "apprenant_id"),
         inverseJoinColumns = @JoinColumn(name = "competence_id")
     )
+    @com.fasterxml.jackson.annotation.JsonManagedReference
     private List<Competence> competences = new ArrayList<>();
 
     // Getters et setters

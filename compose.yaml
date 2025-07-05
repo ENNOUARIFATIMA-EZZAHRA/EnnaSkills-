@@ -31,6 +31,5 @@ volumes:
   mysql_data:
 
 #pour demarrer docker
-#  docker-compose up -d
 #mvn clean package
 #docker-compose up --build -d

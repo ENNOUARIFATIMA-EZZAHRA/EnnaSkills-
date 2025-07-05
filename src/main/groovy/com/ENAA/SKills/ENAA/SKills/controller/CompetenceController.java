@@ -67,7 +67,7 @@ public class CompetenceController {
             for (String titre : dto.sousCompetences) {
                 SousCompetence sc = new SousCompetence();
                 sc.setTitre(titre);
-                sc.setCompetence(competence); // الربط هنا ضروري
+                sc.setCompetence(competence);
                 sousCompetenceService.save(sc);
             }
         }

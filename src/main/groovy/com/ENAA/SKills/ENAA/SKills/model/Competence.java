@@ -23,6 +23,7 @@ public class Competence {
     private List<SousCompetence> sousCompetences;
 
     @ManyToMany(mappedBy = "competences")
+    @com.fasterxml.jackson.annotation.JsonBackReference
     private List<Apprenant> apprenants = new ArrayList<>();
 
     public Long getId() { return id; }
